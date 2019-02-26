@@ -30,6 +30,8 @@ app.get("/",function(req, res) {
        res.redirect("/blogs"); 
    });
    
+   
+
 app.get("/blogs",function(req,res){
           
      Blog.find({},function(err,blogs){
@@ -58,8 +60,12 @@ app.post("/blogs",function(req,res){
       } else{
           //redirect to homepage
         res.redirect("/blogs");  
-      }   
+      }
+      
+       
    });
+    
+    
 });
 
 //SHOW ROUTE
@@ -80,9 +86,11 @@ app.get("/blogs/:id/edit",function(req, res) {
        if(err){
            res.redirect("/blogs");
        } else {
-          res.render("edit",{blog:foundBlog});
+              res.render("edit",{blog:foundBlog});
 
-       }  
+       }
+       
+       
    });
     
 });
@@ -95,23 +103,26 @@ app.put("/blogs/:id",function(req,res){
 
   //Aşağıdaki methodu kullanıyoruz  
 //Blog.findByIdAndUpdate(req.params.id,newData,callback)    
-Blog.findOneAndUpdate(req.params.id,req.body.blog,function(err,updatedBlog){
+Blog.findByIdAndUpdate(req.params.id,req.body.blog,function(err,updatedBlog){
    if(err){
        res.redirect("/blogs");
    } 
     else{
         res.redirect("/blogs/" + req.params.id);
     }
-});   
+});    
+
+
 });
 
 //DELETE ROUTE
 
 app.delete("/blogs/:id",function(req,res){
 //destroy blog
-Blog.findByIdAndDelete(req.params.id,function(err){
+Blog.findByIdAndRemove(req.params.id,function(err){
    if(err){
-       res.redirect("/edit");
+      res.send("fuck");
+       //res.redirect("/blogs");
    } else {
        res.redirect("/blogs");  
    }
@@ -119,10 +130,6 @@ Blog.findByIdAndDelete(req.params.id,function(err){
 });
     
 });
-
-
-
-
 
 app.listen(process.env.PORT,process.env.IP,function(){
    console.log("SERVER IS RUNNING."); 
